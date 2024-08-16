@@ -1,0 +1,23 @@
+{
+  "name": "line-bot-sqs",
+  "version": "1.0.0",
+  "description": "A LINE bot that handles messages and interacts with AWS SQS.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.629.0",
+    "@line/bot-sdk": "^8.0.0",
+    "aws-sdk": "^2.1380.0",
+    "axios": "^1.7.4",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "license": "MIT"
+}

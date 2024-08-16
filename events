@@ -1,0 +1,35 @@
+"message": {
+    "type": "image",
+    "id": "521419964368814405",
+    "quoteToken": "oMx-ptskDJlWHH47KiS8yQQMz-iNL50j6wQnQAGeM1KXkzkutY01b7zrbGoSofY9OIyRNhU8lvgjAYj34lAoGAxTvsiBTabcZthD36BBwsKhiSPCcZVj25dw2gq1SZiB7NlAQyrnsqmjV0vJG00SIQ",
+    "contentProvider": {
+        "type": "line"
+    }
+    "message": {
+        "type": "video",
+        "id": "521420085869412582",
+        "quoteToken": "J-k_LrvdPm_zHF_P6ETxAxxtmgLf02C9DIwGVCFpDEuxxJcqkNJo6uqxy0sneUXtQjV3te4DQscDLg41cv-b3GCK9w81OoHcf_omWeACttDGmyYstGBPzQCZIYHW9WwgKIIZJUt-nUOJIQbVzrnpsA",
+        "duration": 4832,
+        "contentProvider": {
+          "type": "line"
+        }
+
+        "type": "message",
+        "message": {
+          "type": "audio",
+          "id": "521420116740014372",
+          "duration": 5564,
+          "contentProvider": {
+            "type": "line"
+          }
+        },
+
+        "message": {
+            "type": "file",
+            "id": "521420151300555243",
+            "fileName": "sample.pdf",
+            "fileSize": 18810,
+            "contentProvider": {
+              "type": "line"
+            }
+          },
