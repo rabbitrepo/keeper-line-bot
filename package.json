@@ -4,7 +4,7 @@
   "description": "A LINE bot that handles messages and interacts with AWS SQS.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "dependencies": {
