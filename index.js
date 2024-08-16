@@ -11,7 +11,13 @@ dotenv.config();
 const app = express();
 
 // AWS SQS setup
-const sqs = new SQSClient({ region: 'ap-southeast-1' }); // Replace with your AWS region
+const sqs = new SQSClient({
+    region: 'ap-southeast-1',
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    }
+});
 const queueURL = process.env.SQS_QUEUE_URL;
 
 // LINE Bot setup
