@@ -30,10 +30,23 @@ const bot = new line.Client(lineConfig);
 // Middleware
 app.use(bodyParser.json());
 
+function sendLoading(lineId) {
+    axios.post('https://api.line.me/v2/bot/chat/loading/start', {
+        chatId: lineId,
+        loadingSeconds: 60
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${lineConfig.channelAccessToken}`
+        }
+    })
+}
+
 // LINE webhook handler
 app.post('/callback', (req, res) => {
     const events = req.body.events;
 
+   
     events.forEach(event => {
         console.log("Event:", JSON.stringify(event, null, 2));
 
@@ -43,33 +56,24 @@ app.post('/callback', (req, res) => {
             const message = event.message;
             switch (message.type) {
                 case 'text':
+                    sendLoading(lineId);
 
-                    axios.post('https://api.line.me/v2/bot/chat/loading/start', {
-                        chatId: lineId,
-                        loadingSeconds: 60
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${lineConfig.channelAccessToken}`
-                        }
-                    })
-                    // .then(response => {
-                    //     console.log('Response:', response.data);
-                    // })
-                    // .catch(error => {
-                    //     console.error('Error:', error);
-                    // });
-                    // bot.replyMessage(event.replyToken, {
-                    //     type: 'text',
-                    //     text: message.text,
-                    // }).catch(err => console.error('Failed to send reply:', err));
+                    bot.replyMessage(event.replyToken, {
+                        type: 'text',
+                        text: message.text,
+                    }).catch(err => console.error('Failed to send reply:', err));
+
                     break;
 
                 case 'image':
                 case 'video':
                 case 'audio':
                 case 'file':
+
+                    sendLoading(lineId);
+
                     handleFiles(event);
+                    
                     break;
 
                 default:
