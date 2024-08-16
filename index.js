@@ -111,8 +111,10 @@ async function handleFiles(event) {
 }
 
 // Route to test sending messages to SQS
-app.get('/uploaded', async (req, res) => {
+app.post('/uploaded', async (req, res) => {
     const { lineId, replyToken, fileName } = req.body
+
+    console.log('lineId:', lineId, 'replyToken:', replyToken, 'fileName:', fileName);
 
     if (!lineId || !replyToken || !fileName) {
         return res.status(400).send('Missing lineId, replyToken, or fileName');
