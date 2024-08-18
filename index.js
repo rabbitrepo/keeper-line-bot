@@ -4,6 +4,7 @@ const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
 const dotenv = require('dotenv');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
+const { createConfirmMessage } = require('./messages/confirmMessage');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -43,44 +44,82 @@ function sendLoading(lineId) {
 }
 
 // LINE webhook handler
-app.post('/callback', (req, res) => {
+app.post('/callback', async (req, res) => {
     const events = req.body.events;
 
-   
     events.forEach(event => {
         console.log("Event:", JSON.stringify(event, null, 2));
 
         const lineId = event.source.userId;
 
-        if (event.type === 'message') {
-            const message = event.message;
-            switch (message.type) {
-                case 'text':
-                    sendLoading(lineId);
-
+        switch (event.type) {
+            case 'follow':
+                try {
+                    console.log('Follow event:', event);
                     bot.replyMessage(event.replyToken, {
                         type: 'text',
-                        text: message.text,
+                        text: `Keeper เป็นผู้ช่วยเก็บไฟล์ของคุณ ส่งไฟล์มาให้ Keeper เก็บได้เลยนะครับ 😊`,
+                    })
+                } catch (err) {
+                    console.error('Error handleFollow:', err);
+                }
+                break;
+
+            case 'unfollow':
+                break;
+
+            case 'message':
+                const message = event.message;
+                switch (message.type) {
+
+                    case 'image':
+                    case 'video':
+                    case 'audio':
+                    case 'file':
+                        try {
+                            sendLoading(lineId)
+                            handleFiles(event)
+                        } catch (err) {
+                            console.error('Error handleFiles:', err);
+                        }
+                        break;
+
+                    case 'text':
+                        try {
+                            bot.replyMessage(event.replyToken, {
+                                type: 'text',
+                                text: `ขออภัยครับ Keeper ยังไม่รองรับการเก็บ 'ข้อความ' นะครับ 🙏`,
+                            }).catch(err => console.error('Failed to send reply:', err));
+                        } catch (err) {
+                            console.error('Error handleText:', err);
+                        }
+                        break;
+
+                    default:
+                        try {
+                            bot.replyMessage(event.replyToken, {
+                                type: 'text',
+                                text: `ขออภัยครับ Keeper ยังไม่รองรับการเก็บข้อความประเภทนี้นะครับ 🙏`,
+                            }).catch(err => console.error('Failed to send reply:', err));
+                        } catch (err) {
+                            console.error('Error handleDefault:', err);
+                        }
+                        break;
+
+                }
+                break;
+
+            default:
+                try {
+                    bot.replyMessage(event.replyToken, {
+                        type: 'text',
+                        text: `ขออภัยครับ Keeper ยังไม่รองรับการเก็บข้อความประเภทนี้นะครับ 🙏`,
                     }).catch(err => console.error('Failed to send reply:', err));
-
-                    break;
-
-                case 'image':
-                case 'video':
-                case 'audio':
-                case 'file':
-
-                    sendLoading(lineId);
-
-                    handleFiles(event);
-                    
-                    break;
-
-                default:
-                    console.log('Unsupported message content:', message.type);
-            }
-        } else {
-            console.log('Unsupported event type:', event.type);
+                } catch (err) {
+                    console.error('Error handleDefault:', err);
+                }
+                console.log('Unsupported event type:', event.type);
+                break;
         }
     });
 
@@ -126,10 +165,15 @@ app.post('/uploaded', async (req, res) => {
 
     try {
         // TASKS: Reply with flex message | link to file-access service with correct credentials
-        bot.replyMessage(replyToken, {
-            type: 'text',
-            text: `userId: ${lineId} | fileName: ${fileName}`,
-        }).catch(err => console.error('Failed to send reply:', err));
+        // bot.replyMessage(replyToken, {
+        //     type: 'text',
+        //     text: `userId: ${lineId} | fileName: ${fileName}`,
+        // }).catch(err => console.error('Failed to send reply:', err));
+
+        bot.replyMessage(
+            replyToken, 
+            createConfirmMessage(lineId, fileName)
+        )
 
         res.send(`Upload confirmation message send successfully`);
     } catch (err) {
