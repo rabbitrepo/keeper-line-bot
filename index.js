@@ -182,8 +182,8 @@ app.post('/uploaded', async (req, res) => {
     }
 });
 
-// Set the PORT environment variable or default to 3001
-const port = process.env.PORT || 3001;
+// Set the PORT environment variable or default to 3000
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
 });
